@@ -1,0 +1,8 @@
+/traxxas_ws/build/arduino/firmware/CMakeFiles/rebuild_cache.dir
+/traxxas_ws/build/arduino/firmware/CMakeFiles/edit_cache.dir
+/traxxas_ws/build/arduino/firmware/CMakeFiles/traxxas-upload.dir
+/traxxas_ws/build/arduino/firmware/CMakeFiles/upload.dir
+/traxxas_ws/build/arduino/firmware/CMakeFiles/traxxas-size.dir
+/traxxas_ws/build/arduino/firmware/CMakeFiles/traxxas.dir
+/traxxas_ws/build/arduino/firmware/CMakeFiles/uno_Servo.dir
+/traxxas_ws/build/arduino/firmware/CMakeFiles/uno_CORE.dir

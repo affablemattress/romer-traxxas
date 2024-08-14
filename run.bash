@@ -1,0 +1,1 @@
+sudo docker run -it --name=traxxas --user=traxxas --device=/dev/dri --device=/dev/input/js0 --device=/dev/ttyACM0 --network=host --ipc=host --volume=/tmp/.X11-unix:/tmp/.X11-user --volume=./traxxas_ws:/traxxas_ws --env=DISPLAY traxxas:x11

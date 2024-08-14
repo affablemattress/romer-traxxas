@@ -1,0 +1,2 @@
+arduino:controller:imu_parser:relay:tcp_parser
+-DCATKIN_DEVEL_PREFIX=/traxxas_ws/devel -DCMAKE_INSTALL_PREFIX=/traxxas_ws/install -G Unix Makefiles
