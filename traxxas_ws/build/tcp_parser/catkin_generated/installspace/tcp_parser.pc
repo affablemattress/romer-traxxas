@@ -1,8 +1,0 @@
-prefix=/traxxas_ws/install
-
-Name: tcp_parser
-Description: Description of tcp_parser
-Version: 0.0.0
-Cflags: -I${prefix}/include
-Libs: -L${prefix}/lib 
-Requires: roscpp std_msgs message_generation message_runtime

@@ -59,12 +59,14 @@ void setup() {
     //bring all servos to neutral
     servo_esc.writeMicroseconds(1500);
     servo_steer.writeMicroseconds(1500);
-    servo_gear.writeMicroseconds(2000);
+    servo_gear.writeMicroseconds(1100);
 
     //init ros node
+    Serial.begin(57600);
+    node.getHardware()->setBaud(57600);
     node.initNode();
-    node.advertise(imu_raw_pub);
     node.subscribe(steer_sub);
+    node.advertise(imu_raw_pub);
 }
 
 void loop() {
@@ -78,7 +80,7 @@ void loop() {
     }
 
     node.spinOnce();
-    delay(5);
+    delay(50);
 }
 
 void steerCallback(const relay::Steer& steer) {
@@ -106,8 +108,8 @@ void driveSteer(const int8_t steerAngle) {
 }
 
 void driveGear(const int8_t gearPos) {
-  static const uint16_t fullOutPeriod = 1000;
-  static const uint16_t fullInPeriod  = 2000;
+  static const uint16_t fullOutPeriod = 1100;
+  static const uint16_t fullInPeriod  = 1900;
 
   int16_t period = (gearPos == 1) ? fullInPeriod : fullOutPeriod;
   servo_gear.writeMicroseconds(period);

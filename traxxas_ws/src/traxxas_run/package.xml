@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>traxxas_run</name>
+  <version>0.0.0</version>
+  <description>The traxxas_run package</description>
+  <maintainer email="traxxas_pi@todo.todo">traxxas_pi</maintainer>
+  <license>TODO</license>
+
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roslaunch</build_depend>
+
+</package>

@@ -1,1 +1,0 @@
-/usr/bin/avr-g++  -g -Os       -mcall-prologues -ffunction-sections -fdata-sections -fno-exceptions  -Wl,--gc-sections -lm -mmcu=atmega328p  CMakeFiles/traxxas.dir/main.cpp.obj CMakeFiles/traxxas.dir/traxxas_ws/build/arduino/ros_lib/time.cpp.obj  -o /traxxas_ws/devel/share/arduino/traxxas.elf  libuno_Servo.a libuno_CORE.a -lc -lm 

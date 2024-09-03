@@ -127,8 +127,8 @@ int main(int argc, char** argv) {
 
     //send initial joy state to serial
     relay::Steer steer_msg;
-    steer_msg.speed     = (int8_t)floor(joy_state.y_input * 128.0);
-    steer_msg.steer     = (int8_t)floor(joy_state.x_input * 128.0);
+    steer_msg.speed     = (int8_t)floor(joy_state.y_input * 127.0);
+    steer_msg.steer     = (int8_t)floor(joy_state.x_input * 127.0);
     joy_state.send_time = tu::clock::now();
     steer_pub.publish(steer_msg);
 
@@ -154,15 +154,15 @@ int main(int argc, char** argv) {
 
         if((!relay_state.is_emergency) && relay_state.current_mode == Manual && tu::deltaT(current_time, joy_state.send_time) > 50) {
             //send controller input at 5Hz if control mode manual and not in emergency
-            steer_msg.speed     = (int8_t)floor(joy_state.y_input * 128.0);
-            steer_msg.steer     = (int8_t)floor(joy_state.x_input * 128.0);
+            steer_msg.speed     = (int8_t)floor(joy_state.y_input * 127.0);
+            steer_msg.steer     = (int8_t)floor(joy_state.x_input * 127.0);
             joy_state.send_time = tu::clock::now();
             steer_pub.publish(steer_msg);
         } 
         else if((!relay_state.is_emergency) && relay_state.current_mode == Auto && tu::deltaT(current_time, controller_state.send_time) > 50) {
             //send controller state at 20Hz if control mode auto and not in emergency
-            steer_msg.speed            = (int8_t)floor(controller_state.y_input * 128.0);
-            steer_msg.steer            = (int8_t)floor(controller_state.x_input * 128.0);
+            steer_msg.speed            = (int8_t)floor(controller_state.y_input * 127.0);
+            steer_msg.steer            = (int8_t)floor(controller_state.x_input * 127.0);
             controller_state.send_time = tu::clock::now();
             steer_pub.publish(steer_msg);
         }

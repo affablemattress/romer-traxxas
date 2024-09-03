@@ -1,0 +1,8 @@
+<launch>
+	<node name="controller" pkg="controller" type="controller_node" output="screen" />
+	<node name="relay" pkg="relay" type="relay_node" output="screen" />
+	<node name="imu_parser" pkg="imu_parser" type="imu_parser_node" output="screen" />
+	<node name="tcp_parser" pkg="tcp_parser" type="tcp_parser_node" args="192.168.2.15 9001" output="screen" />
+	<node name="joy" pkg="joy" type="joy_node" output="screen" />
+	<node name="arduino_serial" pkg="rosserial_arduino" type="serial_node.py" args="/dev/ttyUNO" output="screen" />
+</launch>

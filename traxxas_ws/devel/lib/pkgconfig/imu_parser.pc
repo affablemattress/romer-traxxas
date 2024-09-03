@@ -1,8 +1,0 @@
-prefix=/traxxas_ws/devel
-
-Name: imu_parser
-Description: Description of imu_parser
-Version: 0.0.0
-Cflags: -I/traxxas_ws/devel/include
-Libs: -L${prefix}/lib 
-Requires: message_generation message_runtime roscpp std_msgs
