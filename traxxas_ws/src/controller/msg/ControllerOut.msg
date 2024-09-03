@@ -1,2 +1,2 @@
-int8 steer
-int8 speed
+float32 steer
+float32 speed
