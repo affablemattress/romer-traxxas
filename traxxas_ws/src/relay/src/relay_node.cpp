@@ -61,7 +61,7 @@ struct ControllerState {
 
     double x_input;
     double y_input;
-} static controller_state = { .send_time = tu::time_point::min(), .x_input = 0.3, .y_input = 1.0 };
+} static controller_state = { .send_time = tu::time_point::min(), .x_input = 0.7, .y_input = 0.0 };
 
 void joyCallback(const sensor_msgs::Joy& joystick_out) {
     if(joystick_out.buttons[button_emergency_stop]) {
@@ -99,10 +99,10 @@ void joyCallback(const sensor_msgs::Joy& joystick_out) {
 }
 
 void controllerCallback(const controller::ControllerOut& controller_out) {
-    ROS_INFO("Controller output received.\n"
-             "\tsteer: %d\n"
-             "\tspeed: %d\n",
-             controller_out.steer, controller_out.speed);
+    //update controller state on recv
+    controller_state.x_input   = controller_out.steer;
+    controller_state.y_input   = controller_out.speed;
+    controller_state.send_time = tu::time_point::min();
 }
 
 int main(int argc, char** argv) {
@@ -110,10 +110,10 @@ int main(int argc, char** argv) {
     ros::NodeHandle node;
 
     //create pub, sub, and services
-    ros::Publisher relay_state_pub      = node.advertise<relay::RelayState>("relay_state", 100, true);
-    ros::Publisher steer_pub            = node.advertise<relay::Steer>("steer", 100, true);
-    ros::Subscriber joy_sub             = node.subscribe("joy", 100, &joyCallback);
-    ros::Subscriber controller_out_sub  = node.subscribe("controller_out", 100, &controllerCallback);
+    ros::Publisher relay_state_pub     = node.advertise<relay::RelayState>("relay_state", 100, true);
+    ros::Publisher steer_pub           = node.advertise<relay::Steer>("steer", 100, true);
+    ros::Subscriber joy_sub            = node.subscribe("joy", 100, &joyCallback);
+    ros::Subscriber controller_out_sub = node.subscribe("controller_out", 100, &controllerCallback);
 
     //sleep rate
     ros::Rate sleep_rate(1);
@@ -131,7 +131,6 @@ int main(int argc, char** argv) {
     steer_msg.steer     = (int8_t)floor(joy_state.x_input * 127.0);
     joy_state.send_time = tu::clock::now();
     steer_pub.publish(steer_msg);
-
 
     while(ros::ok()) {
         tu::time_point current_time = tu::clock::now();
