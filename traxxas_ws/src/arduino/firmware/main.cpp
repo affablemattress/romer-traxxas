@@ -13,6 +13,7 @@
 
 #include "Arduino.h"
 #include <Servo.h>
+#include <Adafruit_BNO055.h>
 
 #ifdef DEV
     extern HardwareSerial Serial; //resolve pre-processor 'error' by defining Serial manually
