@@ -101,9 +101,9 @@ void loop() {
 
     if((current_time - bno_state.recv_time) > 101) {
         sensors_event_t bno_event;
-        bno.getEvent(&bno_event, VECTOR_EULER);
+        bno.getEvent(&bno_event, Adafruit_BNO055::adafruit_vector_type_t::VECTOR_EULER);
 
-        if(bno_state.roll != bno_event.orientation.roll || bno_state.yaw != bno_event.orientation.yaw || bno_state.pitch != bno_event.orientation.pitch) {
+        if(bno_state.roll != bno_event.orientation.z || bno_state.yaw != bno_event.orientation.x || bno_state.pitch != bno_event.orientation.y) {
             //update the buffer and send msg if any of the values have changed
             bno_state.roll    = bno_event.orientation.z;
             bno_state.yaw     = bno_event.orientation.x; //left handed
@@ -112,7 +112,7 @@ void loop() {
             imu_raw_msg.roll  = bno_state.roll;
             imu_raw_msg.yaw   = bno_state.yaw;
             imu_raw_msg.pitch = bno_state.pitch;
-            imu_raw_pub.publish(imu_raw_msg);
+            imu_raw_pub.publish<imu_parser::IMURaw>(imu_raw_msg);
         }
         bno_state.recv_time = millis();
     }
