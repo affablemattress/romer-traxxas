@@ -17,6 +17,7 @@
 
 #include "Arduino.h"
 #include <Servo.h>
+#define ARDUINO_ARCH_AVR
 #include "Adafruit_Sensor.h"
 #include "Adafruit_BNO055.h"
 
