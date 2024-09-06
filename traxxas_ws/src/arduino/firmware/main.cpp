@@ -66,7 +66,7 @@ void setup() {
     pinMode(STER_PIN, OUTPUT);
     pinMode(GEAR_PIN, OUTPUT);
 
-    servo_esc.attach(FOWD_PIN, 1000, 2000);   //1000 REVERSE FULL THROTTLE, 1500 NEUTRAL, 2000 FULL THROTTLE
+    servo_esc.attach(FOWD_PIN, 1000, 3000);   //1000 REVERSE FULL THROTTLE, 1500 NEUTRAL, 2000 FULL THROTTLE
     servo_steer.attach(STER_PIN, 1000, 2000); //1000 STEER_MIN DEGREES LEFT             , 2000 STEER_MAX DEGREES RIGHT
     servo_gear.attach(GEAR_PIN, 1000, 2000);  //1000 FULL OUT                           , 2000 FULL IN
 
@@ -130,8 +130,8 @@ void steerCallback(const relay::Steer& steer) {
 
 void driveESC(const int8_t ESCSpeed) {
   const uint16_t fullReversePeriod = 1000;
-  static const uint16_t neutralPeriod     = 1500;
-  static const uint16_t fullForwardPeriod = 2000;
+  static const uint16_t neutralPeriod     = 2000;
+  static const uint16_t fullForwardPeriod = 3000;
 
   int16_t period = map(ESCSpeed, -128, 127, fullReversePeriod, fullForwardPeriod);
   servo_esc.writeMicroseconds(period);
