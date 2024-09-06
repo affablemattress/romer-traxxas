@@ -24,14 +24,14 @@
     extern HardwareSerial Serial; //resolve pre-processor 'error' by defining Serial manually
 #endif
 
+//message definitions
+imu_parser::IMURaw imu_raw_msg;
+void steerCallback(const relay::Steer& steer);
+
 //node definition
 ros::NodeHandle node;
 ros::Subscriber<relay::Steer> steer_sub("steer", &steerCallback);
 ros::Publisher imu_raw_pub("imu_raw", &imu_raw_msg);
-
-//message definitions
-imu_parser::IMURaw imu_raw_msg;
-void steerCallback(const relay::Steer& steer);
 
 //servo related definitons
 Servo servo_esc;
