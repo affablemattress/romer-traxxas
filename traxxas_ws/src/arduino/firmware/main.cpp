@@ -112,7 +112,7 @@ void loop() {
             imu_raw_msg.roll  = bno_state.roll;
             imu_raw_msg.yaw   = bno_state.yaw;
             imu_raw_msg.pitch = bno_state.pitch;
-            imu_raw_pub.publish<imu_parser::IMURaw>(imu_raw_msg);
+            imu_raw_pub.publish(imu_raw_msg);
         }
         bno_state.recv_time = millis();
     }
