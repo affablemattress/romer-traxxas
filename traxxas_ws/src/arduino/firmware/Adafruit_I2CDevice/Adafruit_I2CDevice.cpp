@@ -1,5 +1,8 @@
 #include "Adafruit_I2CDevice.h"
 
+#define ARDUINO_ARCH_AVR
+#undef WIRE_HAS_END
+
 //#define DEBUG_SERIAL Serial
 
 /*!
