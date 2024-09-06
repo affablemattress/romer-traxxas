@@ -119,7 +119,6 @@ int main(int argc, char** argv) {
 			recv_buffer[recv_bytes] = '\0';
 
 			tcp_parser::GPSData msg;
-			GPSPublisher.publish(msg);
 
 			//set headptr to first relevant data e.g. the third space
 			int head_index = 0;
