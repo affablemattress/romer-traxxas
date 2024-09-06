@@ -66,7 +66,7 @@ void setup() {
     pinMode(STER_PIN, OUTPUT);
     pinMode(GEAR_PIN, OUTPUT);
 
-    servo_esc.attach(FOWD_PIN, 1000, 3000);   //1000 REVERSE FULL THROTTLE, 2000 NEUTRAL, 3000 FULL THROTTLE
+    servo_esc.attach(FOWD_PIN, 1000, 2000);   //1000 REVERSE FULL THROTTLE, 1500 NEUTRAL, 2000 FULL THROTTLE
     servo_steer.attach(STER_PIN, 1000, 2000); //1000 STEER_MIN DEGREES LEFT             , 2000 STEER_MAX DEGREES RIGHT
     servo_gear.attach(GEAR_PIN, 1000, 2000);  //1000 FULL OUT                           , 2000 FULL IN
 
