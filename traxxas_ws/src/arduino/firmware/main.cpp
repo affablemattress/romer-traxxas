@@ -1,10 +1,10 @@
-#define DEV
+#define NDEV
 
 #define FOWD_PIN 6   //MOTOR ESC
 #define STER_PIN 9   //STEERING SERVO
 #define GEAR_PIN 11  //WEIRD SERVO
 
-#ifdef NDEV
+#ifdef DEV
     #define ARDUINO 100 //resolve include error caused by Wprogram.h
     #include "arduino/ros_lib/ros.h"
     #include "arduino/ros_lib/relay/Steer.h"
