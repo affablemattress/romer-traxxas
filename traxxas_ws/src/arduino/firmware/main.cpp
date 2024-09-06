@@ -1,6 +1,10 @@
-#define NDEV
+#define DEV
 
-#ifdef DEV
+#define FOWD_PIN 6   //MOTOR ESC
+#define STER_PIN 9   //STEERING SERVO
+#define GEAR_PIN 11  //WEIRD SERVO
+
+#ifdef NDEV
     #define ARDUINO 100 //resolve include error caused by Wprogram.h
     #include "arduino/ros_lib/ros.h"
     #include "arduino/ros_lib/relay/Steer.h"
@@ -13,23 +17,21 @@
 
 #include "Arduino.h"
 #include <Servo.h>
-#include <Adafruit_BNO055.h>
+#include "Adafruit_Sensor.h"
+#include "Adafruit_BNO055.h"
 
 #ifdef DEV
     extern HardwareSerial Serial; //resolve pre-processor 'error' by defining Serial manually
 #endif
 
-#define FOWD_PIN 6   //MOTOR ESC
-#define STER_PIN 9   //STEERING SERVO
-#define GEAR_PIN 11  //WEIRD SERVO
-
-//ros message definitions
-imu_parser::IMURaw imu_raw_msg;
-void steerCallback(const relay::Steer& steer);
-
+//node definition
 ros::NodeHandle node;
 ros::Subscriber<relay::Steer> steer_sub("steer", &steerCallback);
 ros::Publisher imu_raw_pub("imu_raw", &imu_raw_msg);
+
+//message definitions
+imu_parser::IMURaw imu_raw_msg;
+void steerCallback(const relay::Steer& steer);
 
 //servo related definitons
 Servo servo_esc;
@@ -46,7 +48,18 @@ struct ServoStates {
     int8_t esc_speed;   //INT8_MIN ~ INT8_MAX
     int8_t steer_angle; //INT8_MIN ~ INT8_MAX
     int8_t gear_pos;    //0 ~ 1
-} static servo_states = { .send_time = 0, .esc_speed = 0, .steer_angle = 0, .gear_pos= 1 };
+} static servo_states = { .send_time = 0, .esc_speed = 0, .steer_angle = 0, .gear_pos = 1 };
+
+//bno related definitions
+Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
+
+struct BNOState {
+    uint32_t recv_time; //set recv time to 0 on input receive
+
+    float roll;         //0.0 ~ 360.0
+    float yaw;          //-180.0 ~ 180.0
+    float pitch;        //-90.0 ~ 90.0
+} static bno_state = { .recv_time = 0, .roll = 0.0, .yaw = 0.0, .pitch = 0.0 };
 
 void setup() {
     pinMode(FOWD_PIN, OUTPUT);
@@ -68,20 +81,44 @@ void setup() {
     node.initNode();
     node.subscribe(steer_sub);
     node.advertise(imu_raw_pub);
+
+    //init bno
+    bno.begin();
+    bno.setMode(OPERATION_MODE_NDOF);
+    delay(1000);
+    bno.setExtCrystalUse(1);
 }
 
 void loop() {
     uint32_t current_time = millis();
 
-    if((current_time - servo_states.send_time) > 100) {
+    if((current_time - servo_states.send_time) > 23) {
         driveESC(servo_states.esc_speed);
         driveSteer(servo_states.steer_angle);
 
         servo_states.send_time = millis();
     }
 
+    if((current_time - bno_state.recv_time) > 101) {
+        sensors_event_t bno_event;
+        bno.getEvent(&bno_event, VECTOR_EULER);
+
+        if(bno_state.roll != bno_event.orientation.roll || bno_state.yaw != bno_event.orientation.yaw || bno_state.pitch != bno_event.orientation.pitch) {
+            //update the buffer and send msg if any of the values have changed
+            bno_state.roll    = bno_event.orientation.z;
+            bno_state.yaw     = bno_event.orientation.x; //left handed
+            bno_state.pitch   = bno_event.orientation.y;
+
+            imu_raw_msg.roll  = bno_state.roll;
+            imu_raw_msg.yaw   = bno_state.yaw;
+            imu_raw_msg.pitch = bno_state.pitch;
+            imu_raw_pub.publish(imu_raw_msg);
+        }
+        bno_state.recv_time = millis();
+    }
+
     node.spinOnce();
-    delay(50);
+    delay(13);
 }
 
 void steerCallback(const relay::Steer& steer) {
