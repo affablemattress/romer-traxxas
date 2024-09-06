@@ -1,5 +1,5 @@
 float64 latraw
 float64 lonraw
 ---
-float 64 xcoord
-float 64 ycoord
+float64 xcoord
+float64 ycoord
