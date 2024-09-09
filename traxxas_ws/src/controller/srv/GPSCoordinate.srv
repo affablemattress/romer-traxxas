@@ -3,3 +3,4 @@ float64 lonraw
 ---
 float64 xcoord
 float64 ycoord
+float64 trans_angle
