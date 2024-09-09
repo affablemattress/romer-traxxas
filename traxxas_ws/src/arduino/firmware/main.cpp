@@ -4,6 +4,13 @@
 #define STER_PIN 9   //STEERING SERVO
 #define GEAR_PIN 11  //WEIRD SERVO
 
+#define ESC_MIN   1100
+#define ESC_MAX   1900
+#define STEER_MIN 1100
+#define STEER_MAX 1900
+#define GEAR_MIN  1100
+#define GEAR_MAX  1900
+
 #ifdef DEV
     #define ARDUINO 100 //resolve include error caused by Wprogram.h
     #include "arduino/ros_lib/ros.h"
@@ -66,14 +73,14 @@ void setup() {
     pinMode(STER_PIN, OUTPUT);
     pinMode(GEAR_PIN, OUTPUT);
 
-    servo_esc.attach(FOWD_PIN, 1000, 3000);   //1000 REVERSE FULL THROTTLE, 1500 NEUTRAL, 2000 FULL THROTTLE
-    servo_steer.attach(STER_PIN, 1000, 2000); //1000 STEER_MIN DEGREES LEFT             , 2000 STEER_MAX DEGREES RIGHT
-    servo_gear.attach(GEAR_PIN, 1000, 2000);  //1000 FULL OUT                           , 2000 FULL IN
+    servo_esc.attach(FOWD_PIN, ESC_MIN, ESC_MAX);   //1000 REVERSE FULL THROTTLE, 1500 NEUTRAL, 2000 FULL THROTTLE
+    servo_steer.attach(STER_PIN, STEER_MIN, STEER_MAX); //1000 STEER_MIN DEGREES LEFT             , 2000 STEER_MAX DEGREES RIGHT
+    servo_gear.attach(GEAR_PIN, GEAR_MIN, GEAR_MAX);  //1000 FULL OUT                           , 2000 FULL IN
 
     //bring all servos to neutral
-    servo_esc.writeMicroseconds(1500);
-    servo_steer.writeMicroseconds(1500);
-    servo_gear.writeMicroseconds(1100);
+    servo_esc.writeMicroseconds((ESC_MIN + ESC_MAX) / 2);
+    servo_steer.writeMicroseconds((STEER_MIN + STEER_MAX) / 2);
+    servo_gear.writeMicroseconds(GEAR_MIN);
 
     //init ros node
     Serial.begin(57600);
@@ -129,26 +136,16 @@ void steerCallback(const relay::Steer& steer) {
 }
 
 void driveESC(const int8_t ESCSpeed) {
-  const uint16_t fullReversePeriod = 1000;
-  static const uint16_t neutralPeriod     = 2000;
-  static const uint16_t fullForwardPeriod = 3000;
-
-  int16_t period = map(ESCSpeed, -128, 127, fullReversePeriod, fullForwardPeriod);
+  int16_t period = map(ESCSpeed, -128, 127, ESC_MIN, ESC_MAX);
   servo_esc.writeMicroseconds(period);
 }
 
 void driveSteer(const int8_t steerAngle) {
-  static const uint16_t fullLeftPeriod  = 1100;
-  static const uint16_t fullRightPeriod = 1900;
-
-  int16_t period = map(steerAngle, -128, 127, fullLeftPeriod, fullRightPeriod);
+  int16_t period = map(steerAngle, -128, 127, STEER_MIN, STEER_MAX);
   servo_steer.writeMicroseconds(period);
 }
 
 void driveGear(const int8_t gearPos) {
-  static const uint16_t fullOutPeriod = 1100;
-  static const uint16_t fullInPeriod  = 1900;
-
-  int16_t period = (gearPos == 1) ? fullInPeriod : fullOutPeriod;
+  int16_t period = (gearPos == 1) ? GEAR_MIN : GEAR_MAX;
   servo_gear.writeMicroseconds(period);
 }
