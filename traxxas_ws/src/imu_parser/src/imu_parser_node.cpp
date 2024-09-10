@@ -10,7 +10,7 @@ struct IMUState {
 
     double heading;
     bool is_calibrated;
-} static imu_state = { .send_time = tu::time_point::min(), .heading = 0.0, is_calibrated = false };
+} static imu_state = { .send_time = tu::time_point::min(), .heading = 0.0, .is_calibrated = false };
 
 void imuCallback(const imu_parser::IMURaw& imu_raw) {
     imu_state.heading = -imu_raw.yaw;
