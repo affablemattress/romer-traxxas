@@ -22,12 +22,13 @@ void imuCallback(const imu_parser::IMURaw& imu_raw) {
 int main(int argc, char** argv) {
     ros::init(argc, argv, "imu_parser");
     ros::NodeHandle node;
+    
+    ros::Rate spin_rate(100);
 
     ros::Publisher imu_data_pub = node.advertise<imu_parser::IMUData>("imu_data", 100, true);
     ros::Subscriber imu_raw_sub = node.subscribe("imu_raw", 100, &imuCallback);
     imu_parser::IMUData imu_data_msg;
 
-    ros::Rate spin_rate(100);
     while(ros::ok()) {
         auto current_time = tu::clock::now();
 

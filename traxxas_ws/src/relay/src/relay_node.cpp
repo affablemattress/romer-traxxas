@@ -106,10 +106,10 @@ void controllerCallback(const controller::ControllerOut& controller_out) {
 }
 
 int main(int argc, char** argv) {
-    ros::Rate spin_rate(100);
-    
     ros::init(argc, argv, "relay");
     ros::NodeHandle node;
+
+    ros::Rate spin_rate(100);
 
     //create pub, sub, and services
     ros::Publisher relay_state_pub     = node.advertise<relay::RelayState>("relay_state", 100, true);
