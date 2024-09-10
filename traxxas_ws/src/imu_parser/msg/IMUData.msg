@@ -1,1 +1,3 @@
-float64 heading
+float32 heading
+
+bool is_calibrated

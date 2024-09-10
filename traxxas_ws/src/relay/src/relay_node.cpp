@@ -109,6 +109,8 @@ int main(int argc, char** argv) {
     ros::init(argc, argv, "relay");
     ros::NodeHandle node;
 
+    ros::Rate spin_rate(100);
+
     //create pub, sub, and services
     ros::Publisher relay_state_pub     = node.advertise<relay::RelayState>("relay_state", 100, true);
     ros::Publisher steer_pub           = node.advertise<relay::Steer>("steer", 100, true);
@@ -135,7 +137,7 @@ int main(int argc, char** argv) {
     while(ros::ok()) {
         tu::time_point current_time = tu::clock::now();
 
-        if(tu::deltaT(current_time, relay_state.send_time) > 200) {
+        if(tu::deltaT(current_time, relay_state.send_time) > 1000) {
             //send relay state at 1Hz
             relay_state_msg.control_mode = relay_state.current_mode;
             relay_state_msg.is_emergency = relay_state.is_emergency;
@@ -152,7 +154,7 @@ int main(int argc, char** argv) {
         }
 
         if((!relay_state.is_emergency) && relay_state.current_mode == Manual && tu::deltaT(current_time, joy_state.send_time) > 50) {
-            //send controller input at 5Hz if control mode manual and not in emergency
+            //send controller input at 20Hz if control mode manual and not in emergency
             steer_msg.speed     = (int8_t)floor(joy_state.y_input * 127.0);
             steer_msg.steer     = (int8_t)floor(joy_state.x_input * 127.0);
             joy_state.send_time = tu::clock::now();
@@ -167,5 +169,6 @@ int main(int argc, char** argv) {
         }
 
         ros::spinOnce();
+        spin_rate.sleep();
     }
 }

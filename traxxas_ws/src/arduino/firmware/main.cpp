@@ -71,6 +71,8 @@ struct BNOState {
     float roll;         //-180.0 ~ 180.0
     float yaw;          //0.0 ~ 360.0
     float pitch;        //-90.0 ~ 90.0
+
+    int8_t calibration_quality;
 } static bno_state = { .recv_time = 0, .roll = 0.0, .yaw = 0.0, .pitch = 0.0 };
 
 void setup() {
@@ -111,7 +113,7 @@ void loop() {
         servo_states.send_time = millis();
     }
 
-    if((current_time - bno_state.recv_time) > 101) {
+    if((current_time - bno_state.recv_time) > 53) {
         sensors_event_t bno_event;
         bno.getEvent(&bno_event, Adafruit_BNO055::adafruit_vector_type_t::VECTOR_EULER);
 
@@ -121,12 +123,22 @@ void loop() {
             bno_state.yaw     = bno_event.orientation.x; //left handed
             bno_state.pitch   = bno_event.orientation.y;
 
-            imu_raw_msg.roll  = bno_state.roll;
-            imu_raw_msg.yaw   = bno_state.yaw;
-            imu_raw_msg.pitch = bno_state.pitch;
+            imu_raw_msg.roll                = bno_state.roll;
+            imu_raw_msg.yaw                 = bno_state.yaw;
+            imu_raw_msg.pitch               = bno_state.pitch;
+            imu_raw_msg.calibration_quality = bno_state.calibration_quality; 
             imu_raw_pub.publish(&imu_raw_msg);
         }
         bno_state.recv_time = millis();
+    }
+
+    static uint32_t calibration_recv_time = 0;
+    if((current_time - calibration_recv_time) > 211) {
+        uint8_t sys, gyro, accel, mag;
+        bno.getCalibration(&sys, &gyro, &accel, &mag);
+
+        bno_state.calibration_quality = sys;
+        calibration_recv_time = millis();
     }
 
     node.spinOnce();

@@ -21,6 +21,8 @@
 int main(int argc, char** argv) {
 	ros::init(argc, argv, "tcp_parser");
 	ros::NodeHandle node_handle;
+
+	ros::Rate spin_rate(100);
 	
 	ros::Publisher GPSPublisher = node_handle.advertise<tcp_parser::GPSData>("gps_data", 10);
 	ros::Rate connection_retry_rate(3);
@@ -155,8 +157,10 @@ int main(int argc, char** argv) {
 			headptr = tailptr;
 
 			GPSPublisher.publish(msg);
-			ros::spinOnce();
 		}
+
+		ros::spinOnce();
+		spin_rate.sleep();
 	}
 
 	return 0;
