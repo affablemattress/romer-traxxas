@@ -8,13 +8,16 @@ import math
 firstTime = True
 conversionAngle = 0.0
 
+base_latitude=0.0
+base_longitude=0.0
 
-def gps_coord_convert(coordinates, base_gps):
+
+def gps_coord_convert(coordinates):
     global firstTime
     global conversionAngle
 
-    posxvec=coordinates.latraw-base_gps[0]
-    posyvec=coordinates.lonraw-base_gps[1]
+    posxvec=coordinates.latraw-base_latitude
+    posyvec=coordinates.lonraw-base_longitude
 
     if firstTime:
         firstTime = False
@@ -28,6 +31,7 @@ def gps_coord_convert(coordinates, base_gps):
 
 
 if __name__ == '__main__':
+
 
     while True:
         re_enter_base = input("Would you like to enter new base coordinates? (y/n):")
@@ -52,6 +56,6 @@ if __name__ == '__main__':
         
 
     rospy.init_node("gps_converter")
-    gps_service=rospy.Service("gps_to_coord", GPSCoordinate, gps_coord_convert, (base_latitude, base_longitude))
+    gps_service=rospy.Service("gps_to_coord", GPSCoordinate, gps_coord_convert)
     rospy.spin()
     
