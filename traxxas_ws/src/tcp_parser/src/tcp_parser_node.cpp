@@ -19,6 +19,8 @@
 
 
 int main(int argc, char** argv) {
+	ros::Rate spin_rate(100);
+
 	ros::init(argc, argv, "tcp_parser");
 	ros::NodeHandle node_handle;
 	
@@ -155,8 +157,10 @@ int main(int argc, char** argv) {
 			headptr = tailptr;
 
 			GPSPublisher.publish(msg);
-			ros::spinOnce();
 		}
+
+		ros::spinOnce();
+		spin_rate.sleep();
 	}
 
 	return 0;

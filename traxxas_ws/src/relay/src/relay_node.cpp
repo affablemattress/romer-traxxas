@@ -106,6 +106,8 @@ void controllerCallback(const controller::ControllerOut& controller_out) {
 }
 
 int main(int argc, char** argv) {
+    ros::Rate spin_rate(100);
+    
     ros::init(argc, argv, "relay");
     ros::NodeHandle node;
 
@@ -167,5 +169,6 @@ int main(int argc, char** argv) {
         }
 
         ros::spinOnce();
+        spin_rate.sleep();
     }
 }
