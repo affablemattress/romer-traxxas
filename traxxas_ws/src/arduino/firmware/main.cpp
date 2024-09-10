@@ -72,7 +72,7 @@ struct BNOState {
     float yaw;          //0.0 ~ 360.0
     float pitch;        //-90.0 ~ 90.0
 
-    int32_t calibration_quality
+    int32_t calibration_quality;
 } static bno_state = { .recv_time = 0, .roll = 0.0, .yaw = 0.0, .pitch = 0.0 };
 
 void setup() {
