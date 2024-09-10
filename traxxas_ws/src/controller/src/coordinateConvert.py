@@ -29,12 +29,27 @@ def gps_coord_convert(coordinates, base_gps):
 
 if __name__ == '__main__':
 
-    base_latitude = input("Enter base latitude: ")
-    base_longitude = input("Enter base longitude: ")
+    while True:
+        re_enter_base = input("Would you like to enter new base coordinates? (y/n):")
+        if re_enter_base == 'y' or re_enter_base == 'Y' or re_enter_base== 'n' or re_enter_base == 'N' :
+            break
+        else :
+            print("Please enter a valid response. ")
+    
+    if re_enter_base == 'y' or re_enter_base == 'Y':
+        base_latitude = float(input("Enter base latitude: "))
+        base_longitude = float(input("Enter base longitude: "))
 
-    base_file = open("baseGPS.txt", "w")
-    base_file.writelines([str(base_latitude),"\n", str(base_longitude),"\n"])
-    base_file.close() 
+        base_file = open("baseGPS.txt", "w")
+        base_file.writelines([str(base_latitude),"\n", str(base_longitude),"\n"])
+        base_file.close() 
+    else :
+        base_file = open("baseGPS.txt", "r")
+        lines=base_file.readlines()
+
+        base_latitude=float(lines[0])
+        base_longitude=float(lines[1])  
+        
 
     rospy.init_node("gps_converter")
     gps_service=rospy.Service("gps_to_coord", GPSCoordinate, gps_coord_convert, (base_latitude, base_longitude))

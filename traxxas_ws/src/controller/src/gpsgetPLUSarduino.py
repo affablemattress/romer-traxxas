@@ -8,6 +8,7 @@ from controller.srv import *
 lat=0
 lon=0
 
+
 angle=0 #-1 maximum counter clockwise (-45 degrees), 1 maximum clockwise (45 degrees)
 velocity=0 #-1 maximum backwards, 1 maximum forwards
 
@@ -55,6 +56,7 @@ if __name__ == '__main__':
     rospy.loginfo("Node initialized.")
     rospy.loginfo("Waiting for GPS Converter Server.")
     rospy.wait_for_service("gps_to_coord")
+    
 
     gps_sub = rospy.Subscriber("gps_data", GPSData, do_nothing)
     control_pub = rospy.Publisher("controller_out", ControllerOut, queue_size=5)
