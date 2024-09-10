@@ -11,6 +11,11 @@
 #define GEAR_MIN  1100
 #define GEAR_MAX  1900
 
+#define TAKE_OFF_SPEED 26
+#define MAX_SPEED      50
+
+#define LEAN_CORRECTION -25
+
 #ifdef DEV
     #define ARDUINO 100 //resolve include error caused by Wprogram.h
     #include "arduino/ros_lib/ros.h"
@@ -63,8 +68,8 @@ Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
 struct BNOState {
     uint32_t recv_time; //set recv time to 0 on input receive
 
-    float roll;         //0.0 ~ 360.0
-    float yaw;          //-180.0 ~ 180.0
+    float roll;         //-180.0 ~ 180.0
+    float yaw;          //0.0 ~ 360.0
     float pitch;        //-90.0 ~ 90.0
 } static bno_state = { .recv_time = 0, .roll = 0.0, .yaw = 0.0, .pitch = 0.0 };
 
@@ -135,17 +140,25 @@ void steerCallback(const relay::Steer& steer) {
     servo_states.send_time   = 0;
 }
 
-void driveESC(const int8_t ESCSpeed) {
-  int16_t period = map(ESCSpeed, -128, 127, ESC_MIN, ESC_MAX);
-  servo_esc.writeMicroseconds(period);
+void driveESC(const int8_t ESC_speed) {
+    int8_t clamped_speed;
+
+    //clamp speed to areas where esc does not stall and the speed is managable
+    if(ESC_speed == 0) clamped_speed = 0;
+    else if(ESC_speed < 0) clamped_speed = map(ESC_speed, -128, -1, -MAX_SPEED, -TAKE_OFF_SPEED);
+    else clamped_speed = map(ESC_speed, 1, 128, TAKE_OFF_SPEED, MAX_SPEED);
+
+    int16_t period = map(clamped_speed, -128, 127, ESC_MIN, ESC_MAX);
+    servo_esc.writeMicroseconds(period);
 }
 
-void driveSteer(const int8_t steerAngle) {
-  int16_t period = map(steerAngle, -128, 127, STEER_MIN, STEER_MAX);
-  servo_steer.writeMicroseconds(period);
+void driveSteer(const int8_t steer_angle) {
+    int16_t period = map(steer_angle, -128, 127, STEER_MIN, STEER_MAX);
+    period += LEAN_CORRECTION; //fix right lean?
+    servo_steer.writeMicroseconds(period);
 }
 
 void driveGear(const int8_t gearPos) {
-  int16_t period = (gearPos == 1) ? GEAR_MIN : GEAR_MAX;
-  servo_gear.writeMicroseconds(period);
+    int16_t period = (gearPos == 1) ? GEAR_MIN : GEAR_MAX;
+    servo_gear.writeMicroseconds(period);
 }
