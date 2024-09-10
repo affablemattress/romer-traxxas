@@ -28,8 +28,15 @@ def gps_coord_convert(coordinates, base_gps):
 
 
 if __name__ == '__main__':
+
     base_latitude = input("Enter base latitude: ")
     base_longitude = input("Enter base longitude: ")
+
+    base_file = open("baseGPS.txt", "w")
+    base_file.writelines([str(base_latitude),"\n", str(base_longitude),"\n"])
+    base_file.close() 
+
     rospy.init_node("gps_converter")
     gps_service=rospy.Service("gps_to_coord", GPSCoordinate, gps_coord_convert, (base_latitude, base_longitude))
     rospy.spin()
+    
