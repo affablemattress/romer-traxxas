@@ -13,7 +13,7 @@ struct IMUState {
 } static imu_state = { .send_time = tu::time_point::min(), .heading = 0.0, .is_calibrated = false };
 
 void imuCallback(const imu_parser::IMURaw& imu_raw) {
-    imu_state.heading = -imu_raw.yaw;
+    imu_state.heading = 360.0 - imu_raw.yaw;
     imu_state.is_calibrated = (imu_raw.calibration_quality == 3) ? true : false;
 
     imu_state.send_time = tu::time_point::min(); //set send time to min so data gets sent immidiately on recv
@@ -22,7 +22,7 @@ void imuCallback(const imu_parser::IMURaw& imu_raw) {
 int main(int argc, char** argv) {
     ros::init(argc, argv, "imu_parser");
     ros::NodeHandle node;
-    
+
     ros::Rate spin_rate(100);
 
     ros::Publisher imu_data_pub = node.advertise<imu_parser::IMUData>("imu_data", 100, true);

@@ -123,9 +123,10 @@ void loop() {
             bno_state.yaw     = bno_event.orientation.x; //left handed
             bno_state.pitch   = bno_event.orientation.y;
 
-            imu_raw_msg.roll  = bno_state.roll;
-            imu_raw_msg.yaw   = bno_state.yaw;
-            imu_raw_msg.pitch = bno_state.pitch;
+            imu_raw_msg.roll                = bno_state.roll;
+            imu_raw_msg.yaw                 = bno_state.yaw;
+            imu_raw_msg.pitch               = bno_state.pitch;
+            imu_raw_msg.calibration_quality = bno_state.calibration_quality; 
             imu_raw_pub.publish(&imu_raw_msg);
         }
         bno_state.recv_time = millis();
