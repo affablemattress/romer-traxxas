@@ -11,27 +11,42 @@ conversionAngle = 0.0
 base_latitude=0.0
 base_longitude=0.0
 
+x_mult = 1
+y_mult = 1
 
 def gps_coord_convert(coordinates):
     global firstTime
     global conversionAngle
+
+    global x_mult, y_mult
 
     posxvec=coordinates.latraw - base_latitude
     posyvec=coordinates.lonraw - base_longitude
 
     if firstTime:
         firstTime = False
+
+        if posxvec < 0 :
+            x_mult = -1
+        if posyvec > 0 :
+            y_mult = -1
+        posxvec *= x_mult
+        posyvec *= y_mult
+
         conversionAngle = math.atan(posyvec/posxvec)
+
+    else :
+        posxvec *= x_mult
+        posyvec *= y_mult      
 
     traxxas_new_x=(math.cos(conversionAngle)*posxvec + math.sin(conversionAngle)*posyvec)
     traxxas_new_y=(-1*math.sin(conversionAngle)*posxvec + math.cos(conversionAngle)*posyvec)
 
     return {"xcoord" : traxxas_new_x, "ycoord" : traxxas_new_y, "trans_angle" : math.degrees(conversionAngle)}
-    
+
 
 
 if __name__ == '__main__':
-
 
     while True:
         re_enter_base = input("Would you like to enter new base coordinates? (y/n):")
