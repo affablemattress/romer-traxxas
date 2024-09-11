@@ -16,8 +16,8 @@ def gps_coord_convert(coordinates):
     global firstTime
     global conversionAngle
 
-    posxvec=coordinates.latraw-base_latitude
-    posyvec=coordinates.lonraw-base_longitude
+    posxvec=coordinates.latraw - base_latitude
+    posyvec=coordinates.lonraw - base_longitude
 
     if firstTime:
         firstTime = False

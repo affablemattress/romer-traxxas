@@ -34,7 +34,7 @@ def do_nothing(gps):
         rospy.logwarn("Service call failed: %s", serviceError0)
 
 
-    rospy.loginfo("Latitude: " + str(lat) + " / Longitude: " + str(lot))
+    #rospy.loginfo("Latitude: " + str(lat) + " / Longitude: " + str(lot))
     
     arduinoMessage = ControllerOut()
     
@@ -57,9 +57,9 @@ def do_nothing(gps):
 
     loopCount += 1
 
-    print(gps.xcoord)
-    print(gps.ycoord)
-    print(gps.trans_angle)
+    print(str(gps_new.xcoord))
+    print(str(gps_new.ycoord))
+    print(str(gps_new.trans_angle))
 
 if __name__ == '__main__':
 
