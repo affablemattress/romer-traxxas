@@ -11,8 +11,8 @@ conversionAngle = 0.0
 base_latitude=0.0
 base_longitude=0.0
 
-x_mult = 1
-y_mult = 1
+x_mult = 111139
+y_mult = 111139
 
 def gps_coord_convert(coordinates):
     global firstTime
@@ -20,16 +20,16 @@ def gps_coord_convert(coordinates):
 
     global x_mult, y_mult
 
-    posxvec=coordinates.latraw - base_latitude
-    posyvec=coordinates.lonraw - base_longitude
+    posyvec=coordinates.latraw - base_latitude
+    posxvec=coordinates.lonraw - base_longitude
 
     if firstTime:
         firstTime = False
 
         if posxvec < 0 :
-            x_mult = -1
-        if posyvec > 0 :
-            y_mult = -1
+            x_mult *= -1
+        if posyvec < 0 :
+            y_mult *= -1
         posxvec *= x_mult
         posyvec *= y_mult
 
